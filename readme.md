@@ -371,8 +371,6 @@ kubectl apply -f prometheus-rules.yaml
 | PodDown | Pod not Running | Critical | Investigate & restart |
 | HighNginx5xxErrors | 5xx rate > 5% | Warning | Check backend services |
 
-Full documentation: [METRICS.md](METRICS.md)
-
 ---
 
 ## Project Structure
