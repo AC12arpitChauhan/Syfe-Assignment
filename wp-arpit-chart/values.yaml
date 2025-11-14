@@ -1,0 +1,18 @@
+mysql:
+  image: mysql-local:latest
+  rootPassword: rootpass
+  database: wordpress
+  user: wpuser
+  password: wppass
+  storage: 2Gi
+
+wordpress:
+  image: wordpress-local:latest
+  storage: 1Gi
+
+nginx:
+  image: nginx-local:latest
+  nodePort: 30081
+service:
+  type: ClusterIP
+  port: 80

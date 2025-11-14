@@ -1,0 +1,49 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: wordpress-alerts
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: wordpress
+      interval: 30s
+      rules:
+        - alert: HighPodCPU
+          expr: sum(rate(container_cpu_usage_seconds_total{pod=~"wordpress.*|mysql.*|nginx.*"}[5m])) by (pod) > 0.8
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU usage on {{ $labels.pod }}"
+            description: "Pod {{ $labels.pod }} CPU usage is above 80%"
+        
+        - alert: PodDown
+          expr: kube_pod_status_phase{pod=~"wordpress.*|mysql.*|nginx.*", phase!="Running"} == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pod {{ $labels.pod }} is down"
+            description: "Pod {{ $labels.pod }} is not running"
+    
+    - name: nginx
+      interval: 30s
+      rules:
+        - alert: HighNginx5xxErrors
+          expr: rate(nginx_http_requests_total{status=~"5.."}[5m]) > 0.05
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High 5xx error rate on Nginx"
+            description: "Nginx is returning 5xx errors"
+        
+        - alert: HighNginxRequests
+          expr: rate(nginx_http_requests_total[5m]) > 100
+          for: 2m
+          labels:
+            severity: info
+          annotations:
+            summary: "High request rate on Nginx"
+            description: "Nginx request rate is above 100 req/s"
