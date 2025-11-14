@@ -1,4 +1,6 @@
-# WordPress-MySQL-Nginx Deployment on Kubernetes
+# WordPress-MySQL-Nginx Deployment on Kubernetes with Prometheus and Grafana
+![website](assets/images/wordpress_website.png)
+![Pods Running](assets/images/grafana_nginx_two.png)
 
 **Assignment by Arpit Chauhan**
 
@@ -8,7 +10,7 @@ Below is the complete breakdown of my work, the flow I followed, and how to run 
 
 ---
 
-## 🔹 Phase 1 — Containerization & Local Testing
+## 🔹 Phase 1: Containerization & Local Testing
 
 ### 1. Created Dockerfiles for WordPress, MySQL, and Nginx
 
@@ -44,15 +46,15 @@ docker compose up --build
 ```
 
 I checked:
-- ✅ WordPress opens in the browser
-- ✅ Database initializes correctly
-- ✅ Nginx `proxy_pass` → WordPress works
+- WordPress opens in the browser
+- Database initializes correctly
+- Nginx `proxy_pass` → WordPress works
 
 Once everything worked locally, I moved to Kubernetes.
 
 ---
 
-## 🔹 Phase 2 — Kubernetes Manifests on Minikube
+## 🔹 Phase 2: Kubernetes Manifests on Minikube
 
 ### 3. Wrote Manual Kubernetes Manifests Before Helm
 
@@ -73,7 +75,10 @@ kubectl apply -f wordpress/
 kubectl apply -f nginx/
 ```
 
-### 4. Persistent Volumes (Including NFS Attempt)
+
+### 4. Persistent Volumes (Including NFS)
+
+![Voulume_mounts](assets/images/volume_mounts.png)
 
 Initially, I experimented with:
 - **RWX volumes using an NFS server inside Minikube**
@@ -95,21 +100,13 @@ Commands I used repeatedly:
 kubectl get pods
 kubectl get svc
 kubectl get pvc
-kubectl logs <pod>
-kubectl describe <resource>
 ```
-
-**Screenshots will show:**
-- All running pods
-- Persistent volumes bound
-- Services exposed
-- WordPress login page
 
 Once WordPress started successfully and I logged in from the browser, I finalized that my YAMLs were correct.
 
 ---
 
-## 🔹 Phase 3 — Helm Chart Development
+## 🔹 Phase 3: Helm Chart Development (personal favorite, most time consuming)
 
 ### 6. Studied Helm Structure First
 
@@ -147,11 +144,13 @@ The chart deploys WordPress, MySQL, and Nginx together.
 ```bash
 helm install my-release ./wp-arpit-chart
 ```
+![helm_install](assets/images/helm_install.png)
 
 **Delete:**
 ```bash
 helm delete my-release
 ```
+![helm_update](assets/images/helm_upgrade.png)
 
 Everything deployed correctly — pods running, PVCs bound, WordPress reachable, Nginx proxying.
 
@@ -159,7 +158,9 @@ Everything deployed correctly — pods running, PVCs bound, WordPress reachable,
 
 ---
 
-## 🔹 Phase 4 — Monitoring with Prometheus & Grafana
+## 🔹 Phase 4: Monitoring with Prometheus & Grafana
+![Pods Running](assets/images/grafana_nginx_two.png)
+
 
 ### 9. Installed Prometheus & Grafana Using Official Helm Charts
 
@@ -173,6 +174,7 @@ helm install monitoring prometheus-community/kube-prometheus-stack
 **Grafana:**
 Included in the kube-prometheus-stack installation above.
 
+
 ### 10. Exposed Grafana & Logged In
 
 I used:
@@ -181,6 +183,8 @@ kubectl port-forward svc/monitoring-grafana 3000:80
 ```
 
 Then browsed to `localhost:3000`.
+
+<img width="1440" height="821" alt="grafana_login" src="https://github.com/user-attachments/assets/942dae47-3978-4943-bac4-b59cc22cc1ca" />
 
 **Default login:**
 - Username: `admin`
@@ -213,6 +217,13 @@ kubectl apply -f servicemonitor.yaml
 
 Prometheus started recording & Grafana displayed the graphs.
 
+one is for MySQL server:
+![Pods Running](assets/images/grafana_sql.png)
+
+this one is for Nginx:
+![Pods Running](assets/images/grafana_nginx_one.png)
+
+
 **Screenshots will include:**
 - All running pods
 - Persistent volumes
@@ -222,7 +233,7 @@ Prometheus started recording & Grafana displayed the graphs.
 
 ---
 
-## 🚀 How to Run This Project (For Evaluators)
+## How to Run This Project
 
 ### Prerequisites
 
@@ -338,7 +349,7 @@ kubectl apply -f prometheus-rules.yaml
 
 ---
 
-## 📊 Monitoring Metrics
+## Monitoring Metrics
 
 ### Key Metrics Being Tracked
 
@@ -364,75 +375,7 @@ Full documentation: [METRICS.md](METRICS.md)
 
 ---
 
-## 🛠️ Useful Commands
-
-### Helm Operations
-
-```bash
-# Install
-helm install my-release ./wp-arpit-chart
-
-# Upgrade after changes
-helm upgrade my-release ./wp-arpit-chart
-
-# Delete
-helm delete my-release
-
-# List releases
-helm list
-```
-
-### Kubernetes Operations
-
-```bash
-# View all resources
-kubectl get all
-
-# Watch pods
-kubectl get pods -w
-
-# View logs
-kubectl logs -f <pod-name>
-
-# Execute into pod
-kubectl exec -it <pod-name> -- /bin/bash
-
-# Describe resource
-kubectl describe pod <pod-name>
-```
-
-### Monitoring Access
-
-```bash
-# Grafana
-kubectl port-forward svc/monitoring-grafana 3000:80
-
-# Prometheus
-kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
-
-# Alertmanager
-kubectl port-forward svc/monitoring-kube-prometheus-alertmanager 9093:9093
-```
-
-### Cleanup
-
-```bash
-# Delete application
-helm delete my-release
-
-# Delete monitoring
-helm delete monitoring
-
-# Delete PVCs (optional)
-kubectl delete pvc --all
-
-# Delete PVs (optional)
-kubectl delete pv --all
-```
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```
 .
@@ -464,21 +407,7 @@ kubectl delete pv --all
 
 ---
 
-## 🎯 What I Learned
-
-Through this assignment, I gained hands-on experience with:
-
-✅ **Docker**: Writing Dockerfiles, building custom images, multi-container apps  
-✅ **Docker Compose**: Local testing before Kubernetes  
-✅ **Kubernetes Core Concepts**: Pods, Deployments, Services, PVCs, Secrets  
-✅ **Storage**: Understanding RWO vs RWX, PV/PVC binding, NFS provisioning  
-✅ **Helm**: Chart structure, templating with Go templates, values.yaml  
-✅ **Monitoring**: Prometheus metrics collection, Grafana dashboards, alerting rules  
-✅ **Troubleshooting**: Reading logs, describing resources, debugging pod issues  
-
----
-
-## 📌 Conclusion
+## Conclusion
 
 This project helped me understand the complete flow from containerizing an application to deploying it on Kubernetes with proper monitoring. The setup demonstrates a production-style WordPress deployment with:
 
@@ -493,7 +422,7 @@ The final setup is scalable, maintainable, and follows Kubernetes best practices
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Bitnami WordPress Helm chart for reference
 - Kubernetes & Helm documentation
