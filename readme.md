@@ -9,6 +9,11 @@ This project is part of my Kubernetes assignment where I had to containerize a W
 Below is the complete breakdown of my work, the flow I followed, and how to run this project.
 ---
 
+### Short video of how I implemented it
+
+
+---
+
 ## 🔹 Phase 1: Containerization & Local Testing
 
 ### 1. Created Dockerfiles for WordPress, MySQL, and Nginx
