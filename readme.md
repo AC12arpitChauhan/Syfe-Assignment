@@ -10,7 +10,7 @@ Below is the complete breakdown of my work, the flow I followed, and how to run 
 ---
 
 ### Short video of how I implemented it
-
+[Click here for demo video](assets/images/demo_syfe_assignment.mp4)
 
 ---
 
