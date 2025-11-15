@@ -7,7 +7,6 @@
 This project is part of my Kubernetes assignment where I had to containerize a WordPress application, test it locally, deploy it on Minikube using Kubernetes manifests, and finally convert everything into a Helm chart. Later, I also had to integrate monitoring using Prometheus + Grafana and visualize metrics.
 
 Below is the complete breakdown of my work, the flow I followed, and how to run this project.
-
 ---
 
 ## 🔹 Phase 1: Containerization & Local Testing
