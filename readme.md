@@ -163,7 +163,7 @@ Everything deployed correctly, pods running, PVCs bound, WordPress reachable, Ng
 
 ---
 
-## 🔹 Phase 4: Monitoring with Prometheus & Grafana
+## Phase 4: Monitoring with Prometheus & Grafana
 ![Pods Running](assets/images/grafana_nginx_two.png)
 
 
