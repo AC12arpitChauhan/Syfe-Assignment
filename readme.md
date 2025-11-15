@@ -15,7 +15,7 @@ This project is part of my Kubernetes assignment where I had to containerize a W
 Below is the complete breakdown of my work, the flow I followed, and how to run this project.
 ---
 
-## 🔹 Phase 1: Containerization & Local Testing
+## Phase 1: Containerization & Local Testing
 
 ### 1. Created Dockerfiles for WordPress, MySQL, and Nginx
 
@@ -59,7 +59,7 @@ Once everything worked locally, I moved to Kubernetes.
 
 ---
 
-## 🔹 Phase 2: Kubernetes Manifests on Minikube
+## Phase 2: Kubernetes Manifests on Minikube
 
 ### 3. Wrote Manual Kubernetes Manifests Before Helm
 
@@ -111,7 +111,7 @@ Once WordPress started successfully and I logged in from the browser, I finalize
 
 ---
 
-## 🔹 Phase 3: Helm Chart Development (personal favorite, most time consuming)
+## Phase 3: Helm Chart Development (personal favorite, most time consuming)
 
 ### 6. Studied Helm Structure First
 
@@ -157,7 +157,7 @@ helm delete my-release
 ```
 ![helm_update](assets/images/helm_upgrade.png)
 
-Everything deployed correctly — pods running, PVCs bound, WordPress reachable, Nginx proxying.
+Everything deployed correctly, pods running, PVCs bound, WordPress reachable, Nginx proxying.
 
 **This completed Phase 1 of my assignment.**
 
@@ -404,7 +404,6 @@ kubectl apply -f prometheus-rules.yaml
 │       └── nginx-deployment.yaml
 ├── servicemonitor.yaml
 ├── prometheus-rules.yaml
-├── METRICS.md
 └── README.md
 ```
 
