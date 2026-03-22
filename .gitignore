@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+
+.idea/
+.vscode/
+*.swp
+*~
+
+project-content.json
+resume-bullets.md
